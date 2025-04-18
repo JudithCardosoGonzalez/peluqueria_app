@@ -83,12 +83,20 @@ def eliminar_cita(cita_id):
     conn.close()
     return redirect('/')
 
+
+@app.route('/eliminar_cliente/<int:cliente_id>', methods=['POST'])
+def eliminar_cliente(cliente_id):
+    conn = conectar_db()
+    # Primero eliminar las citas asociadas con ese cliente
+    conn.execute('DELETE FROM citas WHERE cliente_id = ?', (cliente_id,))
+    # Luego eliminar el cliente
+    conn.execute('DELETE FROM clientes WHERE id = ?', (cliente_id,))
+    conn.commit()
+    conn.close()
+    return redirect('/')
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
 
 
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
