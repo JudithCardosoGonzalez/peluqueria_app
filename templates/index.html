@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Peluquería - Clientes y Citas</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, select { margin: 5px; padding: 5px; }
+        .button { margin-top: 10px; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        .button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Clientes</h1>
+    <form action="/registrar_cliente" method="post">
+        Nombre: <input type="text" name="nombre" required>
+        Teléfono: <input type="text" name="telefono" required>
+        <button type="submit">Registrar</button>
+    </form>
+
+    <h2>Agendar Cita</h2>
+    <form action="/agendar_cita" method="post">
+        Cliente:
+        <select name="cliente_id">
+            {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+            {% endfor %}
+        </select>
+        Fecha y hora: <input type="datetime-local" name="fecha" required>
+        Tratamiento: <input type="text" name="tratamiento" required>
+        <button type="submit">Agendar</button>
+    </form>
+
+    <!-- Botón para cambiar entre Próximas Citas y Citas Pasadas -->
+    <div>
+        <a href="/?ver=proximas"><button class="button">Ver Próximas Citas</button></a>
+        <a href="/?ver=pasadas"><button class="button">Ver Citas Pasadas</button></a>
+    </div>
+
+    <h2>{{ titulo }}</h2>
+   <ul>
+    {% for cita in citas %}
+    <li>
+        {{ cita.fecha }} - {{ cita.nombre }} ({{ cita.tratamiento }})
+        <form action="/eliminar_cita/{{ cita.id }}" method="post" style="display:inline;">
+            <button type="submit" onclick="return confirm('¿Eliminar esta cita?')">Eliminar</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
+
